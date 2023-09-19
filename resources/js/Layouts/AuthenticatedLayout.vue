@@ -1,5 +1,4 @@
-<script setup>
-import { ref } from 'vue';
+<script>
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -7,7 +6,31 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
 
-const showingNavigationDropdown = ref(false);
+export default {
+  components: {
+    ApplicationLogo,
+    Dropdown,
+    DropdownLink,
+    NavLink,
+    ResponsiveNavLink,
+    Link,
+  },
+  data() {
+    return {
+      showingNavigationDropdown: false,
+    };
+  },
+  methods: {
+    /**
+     * 判斷現在是否在urlName的路由
+     * @param {String} urlName 路由名稱
+     */
+    currentUrl(urlName = '') {
+      if (urlName === '') return;
+      return route().current(urlName);
+    },
+  },
+};
 </script>
 
 <template>
@@ -29,8 +52,11 @@ const showingNavigationDropdown = ref(false);
 
               <!-- Navigation Links -->
               <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                <NavLink :href="route('dashboard')" :active="currentUrl('dashboard')">
                   Dashboard
+                </NavLink>
+                <NavLink :href="route('product.list')" :active="currentUrl('product.list')">
+                  Product
                 </NavLink>
               </div>
             </div>
@@ -64,7 +90,6 @@ const showingNavigationDropdown = ref(false);
                   </template>
 
                   <template #content>
-                    <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
                     <DropdownLink :href="route('logout')" method="post" as="button">
                       Log Out
                     </DropdownLink>
@@ -113,8 +138,11 @@ const showingNavigationDropdown = ref(false);
           class="sm:hidden"
         >
           <div class="pt-2 pb-3 space-y-1">
-            <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
+            <ResponsiveNavLink :href="route('dashboard')" :active="currentUrl('dashboard')">
               Dashboard
+            </ResponsiveNavLink>
+            <ResponsiveNavLink :href="route('product.list')" :active="currentUrl('product.list')">
+              Product
             </ResponsiveNavLink>
           </div>
 
@@ -128,7 +156,6 @@ const showingNavigationDropdown = ref(false);
             </div>
 
             <div class="mt-3 space-y-1">
-              <ResponsiveNavLink :href="route('profile.edit')"> Profile </ResponsiveNavLink>
               <ResponsiveNavLink :href="route('logout')" method="post" as="button">
                 Log Out
               </ResponsiveNavLink>
@@ -145,7 +172,7 @@ const showingNavigationDropdown = ref(false);
       </header>
 
       <!-- Page Content -->
-      <main>
+      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <slot />
       </main>
     </div>
