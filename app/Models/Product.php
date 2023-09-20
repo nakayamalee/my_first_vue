@@ -36,6 +36,7 @@ class Product extends Model
         'name',
         'price',
         'public',
-        'desc'
+        'desc',
+        'img_path',
     ];
 }

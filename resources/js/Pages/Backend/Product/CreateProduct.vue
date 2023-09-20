@@ -1,8 +1,7 @@
 <script>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Swal from 'sweetalert2';
-import { Head } from '@inertiajs/vue3';
-import { router } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 
 export default {
   components: {
@@ -13,6 +12,7 @@ export default {
     return {
       formData: {
         name: '',
+        image: '',
         price: '',
         public: '',
         desc: '',
@@ -41,6 +41,17 @@ export default {
         },
       });
     },
+    uploadImage(event) {
+      const reader = new FileReader();
+      reader.readAsDataURL(event.target.files[0]);
+      reader.onload = () => {
+        console.log(reader.result);
+        this.formData.image = reader.result;
+      };
+      reader.onerror = (error) => {
+        console.log('Error: ', error);
+      };
+    },
   },
 };
 </script>
@@ -58,6 +69,16 @@ export default {
         <label>
           商品名稱:
           <input v-model="formData.name" name="name" type="text" required>
+        </label>
+        <label>
+          商品照片:
+          <div class="relative inline-block">
+            <div v-if="!formData.image" class="border border-dashed border-[gray] w-[200px] aspect-[4/3] flex justify-center items-center text-[48px] cursor-pointer">
+              +
+            </div>
+            <img v-else :src="formData.image" class="w-[200px] aspect-[4/3] object-cover cursor-pointer" alt="">
+            <input class="absolute top-1/2 left-1/2 translate-y-[10px] w-[1px] h-[1px] opacity-0" name="image" type="file" required @change="(event) => uploadImage(event)">
+          </div>
         </label>
         <label>
           商品價格:
@@ -79,7 +100,9 @@ export default {
           <input v-model="formData.desc" type="text" name="desc">
         </label>
         <div class="flex justify-center items-center gap-[45px]">
-          <button class="btn" type="button">取消新增</button>
+          <Link :href="route('product.list')">
+            <button class="btn" type="button">取消新增</button>
+          </Link>
           <button class="btn" type="submit">確認新增</button>
         </div>
       </form>
