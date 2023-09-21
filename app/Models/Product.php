@@ -39,4 +39,8 @@ class Product extends Model
         'desc',
         'img_path',
     ];
+
+    public function cart() {
+        return $this->hasMany(Cart::class, 'id', 'product_id');
+    }
 }

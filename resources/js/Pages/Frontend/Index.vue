@@ -1,5 +1,7 @@
 <script>
 import ProductCard from '@/Components/Card/ProductCard.vue';
+import { router } from '@inertiajs/vue3';
+import Swal from 'sweetalert2';
 
 export default {
   components: {
@@ -17,18 +19,23 @@ export default {
       title: 'Hello World !',
     };
   },
-  created() {
+  methods: {
+    getDataFromCard(obj, item) {
+      router.visit(route('product.addCart'), { method: 'post', data: { id: item.id, qty: obj.qty }, preserveState: true,
+        onSuccess: ({ props }) => {
+          if (props.flash.message.rt_code === 1) {
+            Swal.fire(`${item.name}成功加入購物車`);
+          }
+        },
+      });
+    },
   },
 };
 </script>
 
 <template>
   <section id="frontend-index" class="max-w-7xl mx-auto">
-    <h1 class="title">{{ title }}</h1>
-    <div class="flex justify-center gap-5 mb-5">
-      <Link :href="route('register')" class="btn-base">註冊</Link>
-      <Link :href="route('dashboard')" class="btn-base">登入</Link>
-    </div>
+    <h1 class="title">商品列表</h1>
     <div class="flex gap-[30px] flex-wrap">
       <!-- <div v-for="item in response.rt_data ?? []" :key="item.id" class="card">
         <img :src="item.img_path" class="w-full aspect-[4/3] object-cover" alt="">
@@ -36,7 +43,7 @@ export default {
         <h3 class="name">商品價格:${{ item.price }}</h3>
         <h3 class="name">商品描述:{{ item.desc }}</h3>
       </div> -->
-      <ProductCard v-for="item in response.rt_data ?? []" :key="item.id" :product-info="item"></ProductCard>
+      <ProductCard v-for="item in response.rt_data ?? []" :key="item.id" :product-info="item" @add-cart="(obj) => getDataFromCard(obj, item)"></ProductCard>
     </div>
   </section>
 </template>
@@ -47,10 +54,6 @@ export default {
 
   .title {
     @apply text-[6.25rem] text-center;
-  }
-
-  .btn-base {
-    @apply p-1.5 border-2 rounded-md border-green-500 cursor-pointer;
   }
 
   // .card {
