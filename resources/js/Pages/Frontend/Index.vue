@@ -56,6 +56,9 @@ export default {
     @apply text-[6.25rem] text-center;
   }
 
+  .card {
+    @apply bg-[red];
+  }
   // .card {
   //   @apply w-[calc(25%-22.5px)] border p-6;
   // }

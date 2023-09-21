@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Services\FileService;
@@ -43,6 +44,14 @@ class ProductController extends Controller
             'desc' => $request->desc,
             'img_path' => $this->fileService->base64Upload($request->image, 'product'),
         ]);
+
+        foreach ($request->otherImage ?? [] as $value) {
+            ProductImage::create([
+                'product_id' => $product->id,
+                'img_path' => $this->fileService->base64Upload($value['img_path'], 'otherProduct'),
+                'sort' => 1,
+            ]);
+        }
 
         return back()->with(['message' => rtFormat($product)]);
     }

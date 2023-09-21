@@ -13,15 +13,18 @@ export default {
       formData: {
         name: '',
         image: '',
+        otherImage: [],
         price: '',
         public: '',
         desc: '',
       },
+      imageSize: 0,
     };
   },
   methods: {
     submitData() {
       const { formData } = this;
+      if (this.imageSize > 3145728) return Swal.fire('圖片檔案過大');
       // 驗證
       router.visit(route('product.store'), { method: 'post', data: formData, preserveState: true,
         onSuccess: ({ props }) => {
@@ -45,12 +48,25 @@ export default {
       const reader = new FileReader();
       reader.readAsDataURL(event.target.files[0]);
       reader.onload = () => {
-        console.log(reader.result);
         this.formData.image = reader.result;
+        this.imageSize += event.target.files[0].size;
       };
-      reader.onerror = (error) => {
-        console.log('Error: ', error);
+    },
+    uploadOtherImage(event) {
+      const reader = new FileReader();
+      reader.readAsDataURL(event.target.files[0]);
+      reader.onload = () => {
+        this.formData.otherImage.push({
+          id: Math.max(0, ...this.formData.otherImage.map(item => item.id)) + 1,
+          img_path: reader.result,
+          size: event.target.files[0].size,
+        });
+        this.imageSize += event.target.files[0].size;
       };
+    },
+    removeImage(id) {
+      this.imageSize -= this.formData.otherImage.find((item) => item.id === id).size;
+      this.formData.otherImage = this.formData.otherImage.filter((item) => item.id !== id);
     },
   },
 };
@@ -70,15 +86,26 @@ export default {
           商品名稱:
           <input v-model="formData.name" name="name" type="text" required>
         </label>
-        <label>
-          商品照片:
-          <div class="relative inline-block">
+        商品照片:
+        <div class="relative">
+          <label class="inline-block w-[200px]">
             <div v-if="!formData.image" class="border border-dashed border-[gray] w-[200px] aspect-[4/3] flex justify-center items-center text-[48px] cursor-pointer">
               +
             </div>
             <img v-else :src="formData.image" class="w-[200px] aspect-[4/3] object-cover cursor-pointer" alt="">
-            <input class="absolute top-1/2 left-1/2 translate-y-[10px] w-[1px] h-[1px] opacity-0" name="image" type="file" required @change="(event) => uploadImage(event)">
+            <input class="absolute top-1/2 left-1/2 translate-y-[10px] w-[1px] h-[1px] opacity-0 inline" name="image" type="file" required @change="(event) => uploadImage(event)">
+          </label>
+        </div>
+        其他照片:
+        <div class="flex flex-wrap gap-[30px]">
+          <div v-for="item in formData.otherImage" :key="item.id" class="relative">
+            <img :src="item.img_path" class="border border-dashed border-[gray] w-[200px] aspect-[4/3] flex justify-center items-center text-[48px] object-cover" alt="">
+            <button type="button" class="rounded-full w-[20px] h-[20px] flex justify-center items-center bg-[red] text-white absolute top-0 right-0 translate-x-1/2 -translate-y-1/2" @click="removeImage(item.id)">X</button>
           </div>
+        </div>
+        <label class="border border-dashed border-[gray] w-[200px] aspect-[4/3] flex justify-center items-center text-[48px] cursor-pointer">
+          +
+          <input type="file" class="hidden" @change="(event) => uploadOtherImage(event)">
         </label>
         <label>
           商品價格:
