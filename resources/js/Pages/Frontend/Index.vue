@@ -43,7 +43,7 @@ export default {
         <h3 class="name">商品價格:${{ item.price }}</h3>
         <h3 class="name">商品描述:{{ item.desc }}</h3>
       </div> -->
-      <ProductCard v-for="item in response.rt_data ?? []" :key="item.id" :product-info="item" @add-cart="(obj) => getDataFromCard(obj, item)"></ProductCard>
+      <ProductCard v-for="item in response.rt_data ?? []" :key="item.id" :product-info="item" class="w-[calc(25%-22.5px)]" @add-cart="(obj) => getDataFromCard(obj, item)"></ProductCard>
     </div>
   </section>
 </template>
@@ -56,11 +56,11 @@ export default {
     @apply text-[6.25rem] text-center;
   }
 
+  // .card {
+    //   @apply w-[calc(25%-22.5px)] border p-6;
+    // }
+  }
   .card {
     @apply bg-[red];
   }
-  // .card {
-  //   @apply w-[calc(25%-22.5px)] border p-6;
-  // }
-}
 </style>
