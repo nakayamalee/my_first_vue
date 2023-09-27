@@ -2,6 +2,7 @@
 import ProductCard from '@/Components/Card/ProductCard.vue';
 import { router } from '@inertiajs/vue3';
 import Swal from 'sweetalert2';
+import { cloneDeep } from 'lodash';
 
 export default {
   components: {
@@ -17,7 +18,12 @@ export default {
   data() {
     return {
       title: 'Hello World !',
+      cloneData: cloneDeep(this.response?.rt_data ?? []),
+      // cloneData: JSON.parse(JSON.stringify(this.response?.rt_data ?? [])),
     };
+  },
+  mounted() {
+    // this.cloneData[0].name = 'test';
   },
   methods: {
     getDataFromCard(obj, item) {
@@ -43,7 +49,7 @@ export default {
         <h3 class="name">商品價格:${{ item.price }}</h3>
         <h3 class="name">商品描述:{{ item.desc }}</h3>
       </div> -->
-      <ProductCard v-for="item in response.rt_data ?? []" :key="item.id" :product-info="item" class="w-[calc(25%-22.5px)]" @add-cart="(obj) => getDataFromCard(obj, item)"></ProductCard>
+      <ProductCard v-for="item in cloneData ?? []" :key="item.id" :product-info="item" class="w-[calc(25%-22.5px)]" @add-cart="(obj) => getDataFromCard(obj, item)"></ProductCard>
     </div>
   </section>
 </template>
