@@ -17,6 +17,10 @@ export default {
       num: 1,
     };
   },
+  mounted() {
+    console.log('doc', document.querySelector('.card'));
+    console.log('ref', this.$refs.myCard);
+  },
   methods: {
     plus() {
       this.num++;
@@ -45,7 +49,7 @@ export default {
 
 <template>
   <section class="productCard">
-    <div class="card">
+    <div ref="myCard" class="card">
       <img :src="productInfo.img_path" class="w-full aspect-[4/3] object-cover" alt="">
       <h3 class="name">商品名稱:{{ productInfo.name }}</h3>
       <h3 class="name">商品價格:${{ productInfo.price }}</h3>
