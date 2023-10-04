@@ -18,8 +18,9 @@ export default {
     };
   },
   mounted() {
-    console.log('doc', document.querySelector('.card'));
-    console.log('ref', this.$refs.myCard);
+    const card = document.querySelector('.card');
+    console.log('DOM', card);
+    console.log('REF', this.$refs);
   },
   methods: {
     plus() {

@@ -22,9 +22,6 @@ export default {
       // cloneData: JSON.parse(JSON.stringify(this.response?.rt_data ?? [])),
     };
   },
-  mounted() {
-    // this.cloneData[0].name = 'test';
-  },
   methods: {
     getDataFromCard(obj, item) {
       router.visit(route('product.addCart'), { method: 'post', data: { id: item.id, qty: obj.qty }, preserveState: true,
