@@ -16,6 +16,9 @@ class FrontController extends Controller
             'response' => rtFormat($products),
         ]);
     }
+    public function test(Request $request) {
+        dd($request->all());
+    }
     public function addCart(Request $request) {
         $request->validate([
             'id' => 'required|numeric|exists:products,id',

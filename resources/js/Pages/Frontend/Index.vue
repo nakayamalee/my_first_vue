@@ -32,6 +32,15 @@ export default {
         },
       });
     },
+    test() {
+      router.visit(route('home.test'), {
+        method: 'post',
+        data: {
+          file: this.$refs.mytest.files[0],
+          _method: 'put',
+        },
+      });
+    },
   },
 };
 </script>
@@ -39,6 +48,10 @@ export default {
 <template>
   <section id="frontend-index" class="max-w-7xl mx-auto">
     <h1 class="title">商品列表</h1>
+    <form @submit.prevent="test()">
+      <input ref="mytest" type="file">
+      <button type="submit">送出</button>
+    </form>
     <div class="flex gap-[30px] flex-wrap">
       <!-- <div v-for="item in response.rt_data ?? []" :key="item.id" class="card">
         <img :src="item.img_path" class="w-full aspect-[4/3] object-cover" alt="">
